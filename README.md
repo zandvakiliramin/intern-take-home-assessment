@@ -42,11 +42,11 @@ Since our unit of observation for the weather data is day, we set our unit of an
 ## Modeling
 In the modeling part we trained a model to predict average daily profits based on location, weather data, month of the transaction and if the transaction is on a weekend or weekday. Overall we had 7225 data points. 80% of the data is randomly selected for training and the rest as used for testing. We trained an XGoost regression model and used random-grid with 500 itterations, two-fold cross validation with one repeatition to do the hyper-parameter tunning. The best model based on the root mean square error of the validation set is chosen to be trained on the whole training dataset and is test on the test set. The final root mean square error of the test set is equal to 5.25. The learning curve for the training and test datasets is shown in the graph below.
 
-<img src="./assets/learning-curve.png" alt="learning-curve" width="400"/>
+<img src="./assets/learning-curve.png" alt="learning-curve" width="300"/>
 
 To add some explainability to our model I have extracted the feature importance using XGboost. The following curve shows the feature importance. Population, temprature, and elevation are the top three important features. Next is if the transaction is in month Feburary, and pressure. The rest of the features are comparaitively lesss important.
 
-<img src="./assets/feature-importance.png" alt="feature-importance" width="400"/>
+<img src="./assets/feature-importance.png" alt="feature-importance" width="600"/>
 
 ## Results and Recommendations
 Our results shows that the difference between mean of daily profit for three candidate locations is not significant at the 95% confidence interval for summer seasons. However for winter seasons the mean of per transaction profit of location 12 is significantly larger than location 11 and location 13. Plot below shows the difference between these three candidate and the table shows the mean income per transaction during winter in different locations.
