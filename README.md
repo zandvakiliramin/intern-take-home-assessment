@@ -1,115 +1,60 @@
-# Take-Home Coding Assessment - 2023 CBG Data Science Summer Internship
+# Managerial Report
 
 ![3M logo](./assets/logos/3M_Logo.svg)
 
-## Preface and Reminders
+## Business Context
+Tyler's Tubing is an outdoor recreation business that offers rentals of equipment for river rafting in the summer and snow rafting in the winter. These activities are highly seasonal and weather dependent, so the business only operates during certain times of the year. The overhead costs and day-to-day expenses are relatively low, and this small business has been profitable over the past few years. The company currently has rental locations in 10 different 
+cities.
 
-This take-home portion of the interview process is intended to get a sense of your skills in an applied setting and 
-understand how you work through problems. The exercise is not meant to take a significant amount of time or dump a 
-ton of work on your plate. The business scenario is hypothetical, the data is fully synthetic, and there is not a 
-specific correct answer to the problem statement we are looking for. We wanted to give you the opportunity to 
-demonstrate your creativity, coding style, and coding habits outside a time-boxed phone interview, and see how you 
-make data-driven decisions.
-
-Please do what you can over the next few days, and if you run out of time, document other ideas you had and what else 
-you were planning to explore. Defining future work and follow-up questions helps give us further insight into how you 
-were approaching the problem. If anything within the business scenario or problem statement seems ambiguous, please use 
-that as an opportunity to take creative liberty and flex your ability to deliver solutions in the face of ambiguity.
-
-Feel free to use whatever programming language and workflow you're comfortable with, and include answers and corroborating 
-evidence to the problem statement in some form of documentation. Again, this is ***NOT*** intended to become a huge, overwhelming 
-take-home problem...just do your best using the time you have available, focus on style and habits, don't go crazy with super 
-complex modeling, and try to have fun showing off your coding strengths!
-
-## Business Scenario
-
+## Business Problem and Research Question
 <img src="./assets/logos/Tylers_Tubing_Logo.png" alt="drawing" width="200"/>
+The business problem is that the company is interested in choosing one of the three candidate locations, 11, 12, and 13. We have access to data regarding all locations' population and elevation, their historical weather data, and also the profit of transactions at the day level for locations 1 to 10 that have been active from January 2019 to October 2022. One crteria for choosing between candidates is the profit that they can make. One strategy for comparing the potential of these candidates for making profit is to estimate how much profit each of them would make, if it was active in the past. So the question is based on a predictive model, which one of these candidate locations would make the highest profit from January 1st through October 30th of 2022. To answer this question we made a machine learning model to predict daily average profit of locations, and compare the candidate locations based on their prediction of average daily profit. Our results show that in terms of daily average profit locations are not significantly different from eachother, but in winter the average daily profitability of laction 12 is significantly higher compared to locations 11 and 13.
 
-Tyler’s Tubing is an outdoor recreation company that offers equipment rentals for river tubing during the summer months 
-and snow tubing during the winter months. These activities are very seasonal and weather dependent, so the business 
-only operates during certain times of the year. The overhead costs and day-to-day expenses are relatively low, and this 
-small business has been profitable over the past few years. The company currently has rental locations in 10 different 
-cities and is interested in expanding to a new city and adding a new location in 2023. There are three candidate locations 
-being considered, and management needs help selecting one of the three candidates.
+## File Structure
+The files of the proejct are structured as follows:
+1 - `data-exploation.ipynb`: This file contains the code for exploring and cleaning the data.
+2 - `modeling.ipynb`: This file contains the code for modeling
+3 - `inference.ipynb`: This file contains the code for inference, and comparision of the models.
 
-#### Existing and Candidate Locations
+## Data Exploration
+We have data about the locations, weather and transaction profits. We explore each group of data seperately. Also since the operation of the business changes between summer and winter, we explore the data for summer and winter sepreately to get a better understanding. 
 
-| Location ID | Current State |
-|-------------|---------------|
-| 001         | Existing      |
-| 002         | Existing      |
-| 003         | Existing      |
-| 004         | Existing      |
-| 005         | Existing      |
-| 006         | Existing      |
-| 007         | Existing      |
-| 008         | Existing      |
-| 009         | Existing      |
-| 010         | Existing      |
-| 011         | Candidate     |
-| 012         | Candidate     |
-| 013         | Candidate     |
+### Location Data
+Exploation of the location data of demonstrate that, location number 10 is much more populated than other locations. Elevations are closer to eachotehr. Also in candidate both location, and elevation of location 12 is higher than location 11 which is itself higher and more populated than location 11.
+<img src="./assets/locations.png" alt="locations" width="800"/>
+
+### Weather Data
+Comparing the plots, that boldest thing is that between three target areas of 10, 11, and, 12, compared to the other two areas 13 is colder, 12 is warmer and 11 has more cloudy days and precipitation. In summers, compared to other two areas, 12 has lower pressure and higher humidity. In winters, compared to other two areas, 11 has lower pressure and 13 has lower humidity. 
+<img src="./assets/weather.png" alt="weather" width="1200"/>
+<img src="./assets/precipitation.png" alt="precipitation" width="1200"/>
+
+### Profit Data
+Since our unit of observation for the weather data is day, we set our unit of analysis to day. To do this we aggregate the profit data to average profit of each day. An interesting point in the daily profit graphs is that the number of days with negative profit is much more in winter compared to summer. It may be the case that in summer people come tubing regularly since schools are closed, and days are also longer. However, in the winter poeple come to tubing only in the weekends which are the days that make the positive profit, but for rest of the days the profit is negetive.
+<img src="./assets/daily-profits.png" alt="daily-profit" width="1200"/>
+
+## Modeling
+In the modeling part we trained a model to predict average daily profits based on location, weather data, month of the transaction and if the transaction is on a weekend or weekday. Overall we had 7225 data points. 80% of the data is randomly selected for training and the rest as used for testing. We trained an XGoost regression model and used random-grid with 500 itterations, two-fold cross validation with one repeatition to do the hyper-parameter tunning. The best model based on the root mean square error of the validation set is chosen to be trained on the whole training dataset and is test on the test set. The final root mean square error of the test set is equal to 5.25. The learning curve for the training and test datasets is shown in the graph below.
+<img src="./assets/learning-curve.png" alt="learning-curve" width="400"/>
+To add some explainability to our model I have extracted the feature importance using XGboost. The following curve shows the feature importance. Population, temprature, and elevation are the top three important features. Next is if the transaction is in month Feburary, and pressure. The rest of the features are comparaitively lesss important.
+
+## Results and Recommendations
+Our results shows that the difference between mean of daily profit for three candidate locations is not significant at the 95% confidence interval for summer seasons. However for winter seasons the mean of per transaction profit of location 12 is significantly larger than location 11 and location 13. Plot below shows the difference between these three candidate and the table shows the mean income per transaction during winter in different locations.
+
+<img src="./assets/inference.png" alt="inference" width="600"/>
+
+| Location ID | Profit per Transaction in Winter (in Dollors)|
+|-------------|----------------------------------------------|
+| Location 11 | 26.21                                        |
+| Location 12 | 26.35                                        |
+| Location 13 | 26.13                                        |
 
 
-Historical profit data from individual transactions (customers paying fees to rent equipment) and daily weather data are 
-available from January 2019 through October 2022 for each of the 10 existing locations, along with a few basic attributes 
-of each location (population of the surrounding city and elevation at the location). Weather data and basic attribute data 
-are also available for the three candidate locations being considered, but transactional data does not exist, since these 
-candidate locations aren't open for business yet. Profits from transactions can occasionally be negative when the daily 
-expenses are larger than the revenue being generated.
+## Disussion and Suggestion for Future Work
+Our analysis shows that Location 12 is a better place, and it is in compliance with our data exploration and feature importance analysis, since it is warmer in winters, and it is more populated (two of the most important features). However, now that I am thinking, if I had the time, I would do an analysis with total sum of transactions each day instead of the average of transactions per day. When I was designing this metric, I was thinking we prefer a few highly profitable transactions to a lof of low profit ones, but now that I have wrote about the analysis, I think doing a model with the sum of transactions per day must also be useful.
 
-There are three different brands of systems used across the 10 existing Tyler's Tubing locations to collect transaction data 
-and calculate the amount of profit from each transaction. The data fields stored by each system are the same, but the data 
-formatting of the fields and the exported file formats differ depending on the brand of the system. Locations only operate 
-during certain times of the year, and are closed on major holidays, so there will be time periods with no profit data.
+Another thing that I think is intersting, is to look at the number businesses that are complement or substitute for the tubing business in the areas close to each of these locations. This is a feature that can be extracted from Google map, and can have good predictive power. As an extra source of information I would check the social media pages of these places and tried to build a customer satisfaction metric for them as well. The least I could do with it is to exclude locations that their customer service is much worse or much better than the other places, since this can affect our analysis a lot.
 
-The process used to collect daily weather information isn’t perfect, so there is a small amount of missing weather data 
-scattered throughout the dataset.
+The next thing that I would have looked at, is that the time that we are considering is the time that Covid hit everywhere, and people in different places have different degrees of compliance to social distancing. I would put this as another feature, since peopel may go to one of these places because social distancing is high. Acfter training the model, to get the estimates I would have tried to eliminate the effect of covid, by putting it the compicance of peopel to social distancing to the lowest degree for my candidate places, since probably by the time they start there is no social distancing in place.
 
-## Data Dictionaries
-
-### Profit Data From Transaction Systems
-
-| Field          | Description                                                 |
-|----------------|-------------------------------------------------------------|
-| location_id    | Unique identifier of the rental location                    |
-| date           | Date when the transaction occurred                          |
-| transaction_id | Unique identifier of the transaction                        |
-| profit         | Amount of profit generated from the transaction in dollars  |
-
-### Weather Data Collected Daily
-
-| Field         | Description                                                                           |
-|---------------|---------------------------------------------------------------------------------------|
-| location_id   | Unique identifier of the rental location                                              |
-| date          | Date when the weather measurements were collected                                     |
-| temperature   | Average temperature during business operating hours in degrees Fahrenheit             |
-| pressure      | Average atmospheric pressure during business operating hours in millibars             |
-| humidity      | Average relative humidity during business operating hours, expressed as a percentage  |
-| cloudy        | Boolean indicating if it was cloudy during operating hours                            |
-| precipitation | Boolean indicating if there was precipitation during operating hours                  |
-
-### Location City Population and Elevation
-
-| Field         | Description                                                  |
-|---------------|--------------------------------------------------------------|
-| location_id   | Unique identifier of the rental location                     |
-| population    | Population of the city where the rental location is located  |
-| elevation     | Approximate elevation at the location in meters              |
-
-### Dates of Major Holidays
-
-| Field     | Description                              |
-|-----------|------------------------------------------|
-| date      | Date of the major holiday                |
-| holiday   | Boolean indicating the date as a holiday |
-
-## Problem Statement
-
-Upper management at Tyler's Tubing wants you to project the profitability of each of the three candidate locations 
-(Location ID '011', '012', and '013'), and based on these projections, help determine which one of the three candidate 
-locations should be opened in 2023. Attempting to predict weather patterns in 2023 is unreasonable, so management 
-would like you to predict what profits ***MIGHT*** have been at each of the three candidate locations ***IF*** the locations 
-had been open and operating during appropriate time periods from January 1st through October 30th of 2022. Based on these 
-predictions, which location would have likely been the most profitable in the first 10 months of 2022 if it had been open 
-for business?
+## Limitations
+I had one week to do this assignment, and I did it in a single weekend day since I was busy with courses, reseach, TA and other PhD stuff. If I had more time and the scope of this work was bigger, I would explore the data much more, tried more models withe more hyper-parameters, and tried to also understand my target variable better. I would also put a lot more time in refactroing and documenting my code and writing this managerial report.  
