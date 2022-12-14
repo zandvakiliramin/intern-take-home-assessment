@@ -53,11 +53,11 @@ Our results shows that the difference between mean of daily profit for three can
 
 <img src="./assets/inference.png" alt="inference" width="600"/>
 
-| Location ID | Profit per Transaction in Winter (in Dollors)|
-|-------------|----------------------------------------------|
-| Location 11 | 26.21                                        |
-| Location 12 | 26.35                                        |
-| Location 13 | 26.13                                        |
+| Location ID | Predicted Profit per Transaction during Winter|
+|-------------|-----------------------------------------------|
+| Location 11 | 26.21$                                         |
+| Location 12 | 26.35$                                         |
+| Location 13 | 26.13$                                         |
 
 
 ## Disussion and Suggestion for Future Work
